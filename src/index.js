@@ -1,10 +1,15 @@
 const express = require('express');
 const path = require('path');
-const route = require('./resources/routes/index');
+const route = require('./routes/index');
 // const morgan = require('morgan');
 const handlebars = require('express-handlebars');
+const mongoose = require('mongoose');
+const db = require('./config/db');
 const app = express();
 const port = 3000;
+
+//Connect Database
+db.connect();
 
 app.use(express.static(path.join(__dirname, 'public')));
 
