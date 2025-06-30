@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const route = require('./routes/index');
+const route = require('./routes');
 // const morgan = require('morgan');
 const handlebars = require('express-handlebars');
 const mongoose = require('mongoose');
