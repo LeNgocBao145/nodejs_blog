@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
+    "beautiful": "lint-staged",
+    "prepare": "husky install",
     "start": "node --watch --inspect src/index.js",
     "watch": "sass --watch src/resources/scss/app.scss src/public/css/app.css",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,6 +24,14 @@
   },
   "homepage": "https://github.com/LeNgocBao145/nodejs_blog#readme",
   "description": "",
+  "lint-staged": {
+    "src/**/*.{json,js,scss}": "prettier --tab-width 4 --single-quote --trailing-comma all --write"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "dependencies": {
     "express": "^5.1.0",
     "express-handlebars": "^8.0.3"
