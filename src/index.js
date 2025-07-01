@@ -3,6 +3,7 @@ const path = require('path');
 const route = require('./routes');
 // const morgan = require('morgan');
 const handlebars = require('express-handlebars');
+const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const db = require('./config/db');
 const app = express();
@@ -10,6 +11,8 @@ const port = 3000;
 
 //Connect Database
 db.connect();
+
+app.use(methodOverride('_method'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -30,6 +33,9 @@ app.engine(
 
     handlebars.engine({
         extname: '.hbs',
+        helpers: {
+            sum: (a, b) => a + b,
+        },
     }),
 );
 app.set('view engine', 'hbs');
