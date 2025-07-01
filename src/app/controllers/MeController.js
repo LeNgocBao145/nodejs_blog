@@ -12,8 +12,6 @@ class MeController {
             )
             .catch(next);
     }
-
-    update(req, res, next) {}
 }
 
 module.exports = new MeController();

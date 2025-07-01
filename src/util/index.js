@@ -3,6 +3,6 @@ module.exports = {
         return courses.map((course) => course.toObject());
     },
     mongooseToObject: (course) => {
-        return course.toObject();
+        return course ? course.toObject() : course;
     },
 };
