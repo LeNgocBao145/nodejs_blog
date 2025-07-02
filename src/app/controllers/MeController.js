@@ -14,13 +14,6 @@ class MeController {
                 });
             })
             .catch(next);
-        // Courses.find({})
-        //     .then((courses) =>
-        //         res.render('me/stored-courses', {
-        //             courses: multiMongooseToObject(courses),
-        //         }),
-        //     )
-        //     .catch(next);
     }
 
     trashCourses(req, res, next) {
