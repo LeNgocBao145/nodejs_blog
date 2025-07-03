@@ -18,7 +18,7 @@ class MeController {
 
     trashCourses(req, res, next) {
         Promise.all([
-            Courses.findDeleted({ deletedAt: { $ne: null } }),
+            Courses.findDeleted({ deletedAt: { $ne: null } }).sortable(req),
             Courses.countDocuments({ deleted: false }),
         ])
             .then(([courses, existCourseCount]) =>

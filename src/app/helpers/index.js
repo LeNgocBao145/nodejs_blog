@@ -6,8 +6,8 @@ module.exports = {
         const typeSort = sort.column === field ? sort.type : 'default';
 
         const icons = {
-            asc: 'oi oi-sort-descending',
-            desc: 'oi oi-sort-ascending',
+            asc: 'oi oi-sort-ascending',
+            desc: 'oi oi-sort-descending',
             default: 'oi oi-elevator',
         };
 

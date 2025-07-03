@@ -15,9 +15,18 @@
     <thead>
       <tr>
         <th scope="col" colspan="2">#</th>
-        <th scope="col">Course Name</th>
-        <th scope="col">Level</th>
-        <th scope="col">Delete On</th>
+        <th scope="col">
+          Course Name
+          {{{ sortTypeBtn 'name' _sort }}}
+        </th>
+        <th scope="col">
+          Level
+          {{{ sortTypeBtn 'level' _sort }}}
+        </th>
+        <th scope="col">
+          Delete On
+          {{{ sortTypeBtn 'deletedAt' _sort }}}
+        </th>
         <th scope="col"></th>
       </tr>
     </thead>
