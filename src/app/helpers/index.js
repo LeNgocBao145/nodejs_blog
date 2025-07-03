@@ -1,0 +1,28 @@
+const Handlebars = require('handlebars');
+
+module.exports = {
+    sum: (a, b) => a + b,
+    sortTypeBtn: (field, sort) => {
+        const typeSort = sort.column === field ? sort.type : 'default';
+
+        const icons = {
+            asc: 'oi oi-sort-descending',
+            desc: 'oi oi-sort-ascending',
+            default: 'oi oi-elevator',
+        };
+
+        const types = {
+            asc: 'desc',
+            desc: 'asc',
+            default: 'desc',
+        };
+
+        const href = Handlebars.escapeExpression(
+            `?_sort&column=${field}&type=${types[typeSort]}`,
+        );
+
+        const output = `<a href="${href}"><span class="${icons[typeSort]}"></span></a>`;
+        console.log(output);
+        return new Handlebars.SafeString(output);
+    },
+};

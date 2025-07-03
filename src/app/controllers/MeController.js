@@ -4,7 +4,7 @@ const { mongooseToObject, multiMongooseToObject } = require('../../util');
 class MeController {
     storedCourses(req, res, next) {
         Promise.all([
-            Courses.find({}),
+            Courses.find({}).sortable(req),
             Courses.countDocumentsWithDeleted({ deleted: true }),
         ])
             .then(([courses, deletedCourseCount]) => {

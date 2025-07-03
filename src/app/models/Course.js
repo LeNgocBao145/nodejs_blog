@@ -23,4 +23,11 @@ Course.plugin(mongooseDelete, {
     overrideMethods: 'all',
 });
 
+Course.query.sortable = function (req) {
+    if ('_sort' in req.query) {
+        return this.sort({ [req.query.column]: req.query.type });
+    }
+    return this;
+};
+
 module.exports = mongoose.model('Course', Course);

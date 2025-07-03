@@ -14,9 +14,19 @@
     <thead>
       <tr>
         <th scope="col" colspan="2">#</th>
-        <th scope="col">Course Name</th>
-        <th scope="col">Level</th>
-        <th scope="col">Create On</th>
+        <th scope="col">
+          Course Name
+          {{!-- <span class="oi oi-elevator"></span> --}}
+          {{{ sortTypeBtn 'name' _sort }}} 
+        </th>
+        <th scope="col">
+          Level
+          {{{ sortTypeBtn 'level' _sort }}}
+          </th>
+        <th scope="col">
+          Create On
+          {{{ sortTypeBtn 'createdAt' _sort }}}
+          </th>
         <th scope="col"></th>
       </tr>
     </thead>

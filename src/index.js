@@ -6,6 +6,7 @@ const handlebars = require('express-handlebars');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const db = require('./config/db');
+const sortMiddleware = require('./app/middlewares/sortMiddleware');
 const app = express();
 const port = 3000;
 
@@ -13,6 +14,9 @@ const port = 3000;
 db.connect();
 
 app.use(methodOverride('_method'));
+
+// Use sort middleware
+app.use(sortMiddleware);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -33,9 +37,7 @@ app.engine(
 
     handlebars.engine({
         extname: '.hbs',
-        helpers: {
-            sum: (a, b) => a + b,
-        },
+        helpers: require('./app/helpers'),
     }),
 );
 app.set('view engine', 'hbs');
