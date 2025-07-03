@@ -22,7 +22,6 @@ module.exports = {
         );
 
         const output = `<a href="${href}"><span class="${icons[typeSort]}"></span></a>`;
-        console.log(output);
         return new Handlebars.SafeString(output);
     },
 };

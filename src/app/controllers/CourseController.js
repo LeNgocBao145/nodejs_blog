@@ -72,6 +72,23 @@ class CourseController {
                 res.status(400).send('Error!!!');
         }
     }
+
+    binHandleFormAction(req, res, next) {
+        switch (req.body.action) {
+            case 'restore':
+                Courses.restore({ _id: { $in: req.body.courseIds } })
+                    .then(() => res.redirect('/me/trash/courses'))
+                    .catch(next);
+                break;
+            case 'delete-permanently':
+                Courses.deleteMany({ _id: { $in: req.body.courseIds } })
+                    .then(() => res.redirect('/me/trash/courses'))
+                    .catch(next);
+                break;
+            default:
+                res.status(400).send('Error!!!');
+        }
+    }
 }
 
 module.exports = new CourseController();

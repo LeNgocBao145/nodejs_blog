@@ -1,85 +1,148 @@
-<h1>My Deleted Courses</h1>
-<a href="/me/stored/courses">My Courses</a>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Course Name</th>
-      <th scope="col">Level</th>
-      <th scope="col">Delete On</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  {{#each courses}}
-  <tbody>
-    <tr>
-      <th scope="row">{{sum @index 1}}</th>
-      <td>{{this.name}}</td>
-      <td>{{this.level}}</td>
-      <td>{{this.deletedAt}}</td>
-      <td>
-        <a href="" class="btn btn-link btn-restore" data-id="{{this._id}}">Restore</a>
-        <a href="" class="btn btn-link" data-toggle="modal" data-id="{{this._id}}"
-          data-target="#delete-course-modal">Delete Forever</a>
-      </td>
+<form method="POST" action="" name="container-form">
+  <h1>My Deleted Courses</h1>
+  <a href="/me/stored/courses">My Courses ({{ existCourseCount }})</a>
+  <div class="align-items-center d-flex">
+    <input type="checkbox" class="form-check-input" id="checked-all-course-box">
+    <label class="form-check-label" for="checked-all-course-box">Select All</label>
+    <select id="checked-all-course-options" class="custom-select custom-select-sm" name="action" required>
+      <option value=""> -- Choose Action --</option>
+      <option value="restore">Restore</option>
+      <option value="delete-permanently">Delete Permanently</option>
+    </select>
+    <button class="btn btn-primary execute-action-submit" disabled>Execute</button>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col" colspan="2">#</th>
+        <th scope="col">Course Name</th>
+        <th scope="col">Level</th>
+        <th scope="col">Delete On</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    {{#each courses}}
+    <tbody>
+      <tr>
+        <td>
+          <input type="checkbox" class="form-check-input" name="courseIds[]" value="{{this._id}}">
+        </td>
+        <th scope="row">{{sum @index 1}}</th>
+        <td>{{this.name}}</td>
+        <td>{{this.level}}</td>
+        <td>{{this.deletedAt}}</td>
+        <td>
+          <a href="" class="btn btn-link btn-restore" data-id="{{this._id}}">Restore</a>
+          <a href="" class="btn btn-link" data-toggle="modal" data-id="{{this._id}}"
+            data-target="#delete-course-modal">Delete Permanently</a>
+        </td>
 
-    </tr>
-    {{else}}
-    <tr>
-      <td colspan="5" class="text-center">
-        Recycle Bin Courses is empty
-        <a href="/me/stored/courses">My Courses</a>
-      </td>
-    </tr>
-    {{/each}}
-  </tbody>
-</table>
+      </tr>
+      {{else}}
+      <tr>
+        <td colspan="5" class="text-center">
+          Recycle Bin Courses is empty
+          <a href="/me/stored/courses">My Courses</a>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
 
-<div class="modal" id="delete-course-modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Delete Course</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Do you want to delete this course?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" id="btn-delete-course">Delete</button>
+  <div class="modal" id="delete-course-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Course</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Do you want to delete permanently these courses?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" id="btn-delete-course">Delete Permanently</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<form method="POST" action="" name="restore-course-form"></form>
-<form method="POST" action="" name="delete-course-form"></form>
+  <form method="POST" action="" name="restore-course-form"></form>
+  <form method="POST" action="" name="delete-course-form"></form>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    deleteForm = document.forms['delete-course-form']
-    restoreForm = document.forms['restore-course-form']
-    const btnDeleteCourse = document.getElementById('btn-delete-course');
-    const btnRestoreCourse = $('.btn-restore');
-    var courseId;
-    $('#delete-course-modal').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget) // Button that triggered the modal
-      courseId = button.data('id');
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const deleteForm = document.forms['delete-course-form']
+      const restoreForm = document.forms['restore-course-form']
+      const containerForm = document.forms['container-form']
+
+      const checkedCourseBox = $('input[name="courseIds[]"]');
+      const checkedAllCourseBox = $('#checked-all-course-box');
+      const btnDeleteCourse = document.getElementById('btn-delete-course');
+      const btnRestoreCourse = $('.btn-restore');
+      const btnExecuteAction = $('.execute-action-submit');
+
+      var courseId;
+      $('#delete-course-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        courseId = button.data('id');
+      })
+      btnDeleteCourse.onclick = (e) => {
+        e.preventDefault();
+        if (btnExecuteAction.prop('disabled', false) && $('select').val()) {
+          containerForm.action = `/courses/bin-handle-form-action`;
+          containerForm.submit();
+          return
+        }
+        deleteForm.action = `/courses/${courseId}/delete-forever?_method=DELETE`;
+        deleteForm.submit();
+      }
+
+      btnRestoreCourse.click(function (e) {
+        e.preventDefault();
+        const courseId = $(this).data('id');
+        restoreForm.action = `/courses/${courseId}/restore?_method=PATCH`;
+        restoreForm.submit();
+      })
+
+      checkedAllCourseBox.change(function (e) {
+        const isChecked = checkedAllCourseBox.prop('checked');
+        checkedCourseBox.prop('checked', isChecked);
+        renderUIExecuteBtn();
+      })
+
+      checkedCourseBox.change(function (e) {
+        const isCheckedAll = checkedCourseBox.length === $('input[name="courseIds[]"]:checked').length;
+        checkedAllCourseBox.prop('checked', isCheckedAll);
+        renderUIExecuteBtn();
+      })
+
+      function renderUIExecuteBtn() {
+        const checkedBoxCount = $('input[name="courseIds[]"]:checked').length;
+        if (checkedBoxCount > 0) {
+          btnExecuteAction.attr('disabled', false);
+        } else {
+          btnExecuteAction.attr('disabled', true);
+        }
+      }
+
+      btnExecuteAction.click(function (e) {
+        e.preventDefault();
+        const isDisabled = $(this).prop('disabled');
+        if ($('select').val() === 'delete-permanently' && !isDisabled) {
+
+          $(this).attr('data-toggle', 'modal');
+          $(this).attr('data-target', '#delete-course-modal');
+        } else {
+
+          $(this).removeAttr('data-toggle');
+          $(this).removeAttr('data-target');
+          containerForm.action = `/courses/bin-handle-form-action`;
+          containerForm.submit();
+        }
+      })
     })
-    btnDeleteCourse.onclick = (e) => {
-      e.preventDefault();
-      deleteForm.action = `/courses/${courseId}/delete-forever?_method=DELETE`;
-      deleteForm.submit();
-    }
-
-    btnRestoreCourse.click(function (e) {
-      e.preventDefault();
-      const courseId = $(this).data('id');
-      restoreForm.action = `/courses/${courseId}/restore?_method=PATCH`;
-      restoreForm.submit();
-    })
-  })
-</script>
+  </script>
+</form>

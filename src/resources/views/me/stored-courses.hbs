@@ -1,4 +1,4 @@
-<form method="POST" name="container-form" action="/courses/handle-form-action">
+<form method="POST" name="container-form" action="">
   <h1>My Courses</h1>
   <a href="/me/trash/courses">Recycle Bin Courses ({{deletedCourseCount}})</a>
   <div class="align-items-center d-flex">
@@ -17,16 +17,16 @@
         <th scope="col">
           Course Name
           {{!-- <span class="oi oi-elevator"></span> --}}
-          {{{ sortTypeBtn 'name' _sort }}} 
+          {{{ sortTypeBtn 'name' _sort }}}
         </th>
         <th scope="col">
           Level
           {{{ sortTypeBtn 'level' _sort }}}
-          </th>
+        </th>
         <th scope="col">
           Create On
           {{{ sortTypeBtn 'createdAt' _sort }}}
-          </th>
+        </th>
         <th scope="col"></th>
       </tr>
     </thead>
@@ -68,7 +68,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Do you want to delete this course?</p>
+          <p>Do you want to delete these courses?</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -104,6 +104,11 @@
     })
 
     btnDeleteCourse.onclick = () => {
+      if(btnExecuteAction.prop('disabled', false)){
+        containerForm.action = `/courses/handle-form-action`;
+        containerForm.submit();
+        return
+      }
       deleteForm.action = `/courses/${courseId}?_method=DELETE`;
       deleteForm.submit();
     }
@@ -129,12 +134,21 @@
       }
     }
 
-    containerForm.addEventListener('submit', function (e) {
-  const formData = new FormData(containerForm);
-  console.log('Đang submit form:');
-  for (let pair of formData.entries()) {
-    console.log(`${pair[0]}: ${pair[1]}`);
-  }
-});
-  })
+
+    btnExecuteAction.click(function (e) {
+      e.preventDefault();
+      const isDisabled = $(this).prop('disabled');
+      if ($('select').val() === 'delete' && !isDisabled) {
+
+        $(this).attr('data-toggle', 'modal');
+        $(this).attr('data-target', '#delete-course-modal');
+      } else {
+
+        $(this).removeAttr('data-toggle');
+        $(this).removeAttr('data-target');
+
+      }
+    })
+  
+  });
 </script>

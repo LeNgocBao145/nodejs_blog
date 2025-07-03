@@ -17,9 +17,13 @@ class MeController {
     }
 
     trashCourses(req, res, next) {
-        Courses.findDeleted({ deletedAt: { $ne: null } })
-            .then((courses) =>
+        Promise.all([
+            Courses.findDeleted({ deletedAt: { $ne: null } }),
+            Courses.countDocuments({ deleted: false }),
+        ])
+            .then(([courses, existCourseCount]) =>
                 res.render('me/trash-courses', {
+                    existCourseCount,
                     courses: multiMongooseToObject(courses),
                 }),
             )
